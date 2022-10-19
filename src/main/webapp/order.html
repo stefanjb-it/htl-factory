@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order</title>
+    <link rel="stylesheet" href="main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<h1>HTL Factory Order System</h1>
+<h2>New Order</h2>
+<div id="order">
+    <form id="form" onSubmit="send_order()" >
+        <label for="cat">Type of Order:</label>
+        <select name="cat" id="cat">
+        </select><br>
+        <label for="s_name">Student/Team:</label>
+        <input id="s_name" name="s_name" type="text"><br>
+        <label for="s_class">Class:</label>
+        <input id="s_class" name="s_class" type="text"><br>
+        <label for="project">Project:</label>
+        <input id="project" name="project" type="text"><br>
+        <label for="comment">Comment:</label>
+        <input id="comment" name="comment" type="text"><br>
+        <button type="submit">Send</button>
+        <input type="reset">
+    </form>
+</div>
+<h2>Overview</h2>
+<div id="back">
+    <a href="overview.html">show order overview</a>
+</div>
+</body>
+<script>
+
+    var form = document.getElementById("form");
+    function handleForm(event) { event.preventDefault(); }
+    form.addEventListener('submit', handleForm);
+
+    window.onload = function () {
+        let cat = document.getElementById("cat");
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/htl_factory_war_exploded/FactoryServlet/category",
+            success: function(data){
+                for (var k in data){
+                    let option = document.createElement("option");
+                    option.text = data[k].name;
+                    option.value = data[k].id;
+                    cat.add(option);
+                }
+            },
+            dataType: "json"
+        })
+    }
+
+    function successfully_failed(data){
+        var response=$(data);
+        console.log(response);
+    }
+
+    function send_order(){
+        let cat = document.getElementById("cat").value;
+        let s_name = document.getElementById("s_name").value;
+        let s_class = document.getElementById("s_class").value;
+        let project = document.getElementById("project").value;
+        let comment = document.getElementById("comment").value;
+
+        if (cat == undefined){
+            alert("Please select category!");
+            return;
+        }
+        if (s_name == undefined){
+            alert("Please enter student name!");
+            return;
+        }
+        if (s_class == undefined){
+            alert("Please enter class!");
+            return;
+        }
+        if (project == undefined){
+            alert("Please enter project name!");
+            return;
+        }
+        if (comment == undefined){
+            alert("Please enter comment!");
+            return;
+        }
+
+        let form_data = {
+            cat_id:cat,
+            s_name:s_name,
+            s_class:s_class,
+            project:project,
+            comment:comment
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "http://localhost:8080/htl_factory_war_exploded/FactoryServlet/order",
+            data: JSON.stringify(form_data),
+            success: function(response){
+                window.location = "http://localhost:8080/htl_factory_war_exploded/confirm.html?id="+response.id;
+            },
+            dataType: "json",
+            contentType: "application/json"
+        })
+
+    }
+</script>
+</html>

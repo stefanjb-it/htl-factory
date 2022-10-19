@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Orders</title>
+    <link rel="stylesheet" href="main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<h1>Order overview</h1>
+<h2>3D Print</h2>
+<div id="overview1">
+    <table>
+        <thead>
+            <tr>
+                <th>Order Nr.</th>
+                <th>Schüler</th>
+                <th>Klasse</th>
+                <th>Projekt</th>
+                <th>Kommentar</th>
+                <th>Kategorie</th>
+            </tr>
+        </thead>
+        <tbody id="ov1"></tbody>
+    </table>
+</div>
+<h2>Lasercutter</h2>
+<div id="overview2">
+    <table>
+        <thead>
+            <tr>
+                <th>Order Nr.</th>
+                <th>Schüler</th>
+                <th>Klasse</th>
+                <th>Projekt</th>
+                <th>Kommentar</th>
+                <th>Kategorie</th>
+            </tr>
+        </thead>
+        <tbody id="ov2"></tbody>
+    </table>
+</div>
+<h2>PCB</h2>
+<div id="overview3">
+    <table>
+        <thead>
+            <tr>
+                <th>Order Nr.</th>
+                <th>Schüler</th>
+                <th>Klasse</th>
+                <th>Projekt</th>
+                <th>Kommentar</th>
+                <th>Kategorie</th>
+            </tr>
+        </thead>
+        <tbody id="ov3"></tbody>
+    </table>
+</div>
+<div style="padding: 1%">
+    <a href="order.html">back to order page</a>
+</div>
+</body>
+<script>
+
+    var data_response;
+
+    function delete_order(id){
+        let obj = data_response.find(element => element.id === id);
+        let sender = {
+            id: obj.id,
+            s_name: obj.student,
+            s_class: obj.s_class,
+            project: obj.project,
+            comment: obj.comment,
+            cat_id: obj.category.id,
+            cat_name: obj.category.name
+        }
+        $.ajax({
+            type: "DELETE",
+            url: "http://localhost:8080/htl_factory_war_exploded/FactoryServlet/order",
+            data: JSON.stringify(sender),
+            success: function(response){
+                if(response.ok == 1){
+                    location.reload();
+                }
+            },
+            dataType: "json",
+            contentType: "application/json"
+        })
+    }
+
+    window.onload = function() {
+
+        let table_1 = document.getElementById("ov1")
+        let table_2 = document.getElementById("ov2")
+        let table_3 = document.getElementById("ov3")
+
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/htl_factory_war_exploded/FactoryServlet/order",
+            success: function(data){
+                data_response = data;
+                data.forEach(item => {
+                    switch (item.category.id){
+                        case 1:
+                            let row = table_1.insertRow()
+                            let order_nr = row.insertCell(0)
+                            let name = row.insertCell(1)
+                            let class_s = row.insertCell(2)
+                            let project = row.insertCell(3)
+                            let comment = row.insertCell(4)
+                            let cat = row.insertCell(5)
+                            let delete_btn = row.insertCell(6)
+                            order_nr.innerHTML = item.id
+                            name.innerHTML = item.student
+                            class_s.innerHTML = item.s_class
+                            project.innerHTML = item.project
+                            comment.innerHTML = item.comment
+                            cat.innerHTML = item.category.name
+                            delete_btn.innerHTML = "<td><button onclick=\"delete_order("+item.id+")\">Löschen</button></td>"
+                            break;
+
+                        case 2:
+                            let row_2 = table_2.insertRow()
+                            let order_nr_2 = row_2.insertCell(0)
+                            let name_2 = row_2.insertCell(1)
+                            let class_s_2 = row.insertCell(2)
+                            let project_2 = row_2.insertCell(3)
+                            let comment_2 = row_2.insertCell(4)
+                            let cat_2 = row_2.insertCell(5)
+                            let delete_btn_2 = row_2.insertCell(6)
+                            order_nr_2.innerHTML = item.id
+                            name_2.innerHTML = item.student
+                            class_s_2.innerHTML = item.s_class
+                            project_2.innerHTML = item.project
+                            comment_2.innerHTML = item.comment
+                            cat_2.innerHTML = item.category
+                            delete_btn_2.innerHTML = "<td><button onclick=\"delete_order("+item.id+")\">Löschen</button></td>"
+                            break;
+
+                        case 3:
+                            let row_3 = table_3.insertRow()
+                            let order_nr_3 = row_3.insertCell(0)
+                            let name_3 = row_3.insertCell(1)
+                            let class_s_3 = row.insertCell(2)
+                            let project_3 = row_3.insertCell(3)
+                            let comment_3 = row_3.insertCell(4)
+                            let cat_3 = row_3.insertCell(5)
+                            let delete_btn_3 = row_3.insertCell(6)
+                            order_nr_3.innerHTML = item.id
+                            name_3.innerHTML = item.student
+                            class_s_3.innerHTML = item.s_class
+                            project_3.innerHTML = item.project
+                            comment_3.innerHTML = item.comment
+                            cat_3.innerHTML = item.category
+                            delete_btn_3.innerHTML = "<td><button onclick=\"delete_order("+item.id+")\">Löschen</button></td>"
+                            break;
+                    }
+                })
+            },
+            dataType: "json"
+        })
+    }
+</script>
+</html>

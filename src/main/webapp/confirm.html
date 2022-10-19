@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirm</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+<div id="confirm">
+    <h1>Thank you for your order</h1>
+    <h2 id="id_s"></h2>
+    <a href="order.html">back to order page</a>
+</div>
+<script>
+    window.onload = function () {
+        let parameter = new URL(window.location.href).searchParams.get("id");
+        document.getElementById("id_s").innerHTML = "Your order number is " + parameter + ".";
+    }
+</script>
+</body>
+</html>

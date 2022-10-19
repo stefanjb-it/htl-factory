@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="htl-factory:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>htl-factory</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="htl-factory-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="htl-factory:war exploded" />
+    </root>
+  </artifact>
+</component>
